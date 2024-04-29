@@ -1,0 +1,152 @@
+Q1 ) Create a table called test_table with 2 columns RecordNumber (type :
+Number(3)) and CurrentDate (type : Date)). Write a procedure in PSM which will
+insert 50 records into test_table. Insert the current date value into the table.
+
+
+
+Procedure MySQL: 
+
+
+use assignment2;
+
+create table test_table2(
+	RecordNo INT,
+    CurrentDate Date
+);
+
+
+
+DELIMITER //
+
+create procedure insert_records2()
+begin
+	declare i int default 1;
+    
+    while i <= 50 do
+		insert into test_table2 (RecordNo,CurrentDate) values (i,curdate());
+        set i = i+1;
+	end while;
+end//
+
+delimiter ;
+
+
+call insert_records2();
+
+
+
+Q2 ) Create a products table products(ProductID number(4),category char(3),detail
+varchar2(30),price number(10,2),stock number(5)). Insert the sample data. Write
+PSM procedure with two arguments X & Y which will increase price by X% for all
+products in category Y. X and Y will be given by user.
+
+
+-- Select the database
+USE assignment2;
+
+-- Create the products table
+CREATE TABLE products4 (
+    ProductID INT,
+    category VARCHAR(3),
+    detail VARCHAR(30),
+    price DECIMAL(10,2),
+    stock INT
+);
+
+-- Insert sample data into the products table
+INSERT INTO products4 (ProductID, category, detail, price, stock)
+VALUES
+    (1, 'Cat', 'Product 1', 100.00, 50),
+    (2, 'Dog', 'Product 2', 200.00, 30),
+    (3, 'Cat', 'Product 3', 150.00, 20),
+    (4, 'Dog', 'Product 4', 180.00, 40);
+
+-- Change safe update mode
+SET sql_safe_updates = 0;
+
+-- Create the stored procedure to increase price by X% for all products in category Y
+DELIMITER //
+
+CREATE PROCEDURE IncreasePriceByPercentage4(IN X DECIMAL(5,2), IN Y VARCHAR(3))
+BEGIN
+    UPDATE products3
+    SET price = price * (1 + X/100)
+    WHERE category = Y;
+END//
+
+DELIMITER ;
+
+-- Call the stored procedure
+CALL IncreasePriceByPercentage4(10,'Dog');
+
+-- Select and display data from the products table
+SELECT * FROM products3;
+
+
+Q3 : Create an Object Table containing a field “name” of size 50 characters and member
+function “countNoOfWords” which returns the no. of words in the “name” field.
+Demonstrate the working by entering different data
+
+
+CREATE TABLE ObjectTable (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50)
+);
+
+DELIMITER //
+
+CREATE FUNCTION countNoOfWords (nameValue VARCHAR(50)) RETURNS INT DETERMINISTIC
+BEGIN
+  DECLARE wordCount INT;
+  SET wordCount = 0;
+
+  IF nameValue IS NOT NULL THEN
+    SET wordCount = LENGTH(nameValue) - LENGTH(REPLACE(nameValue, ' ', '')) + 1;
+  END IF;
+
+  RETURN wordCount;
+END //
+
+DELIMITER;
+
+INSERT INTO ObjectTable (name) VALUES ('This is a sample text');
+INSERT INTO ObjectTable (name) VALUES ('Another example with more words');
+INSERT INTO ObjectTable (name) VALUES ('SingleWord');
+
+SELECT id, name, countNoOfWords(name) AS wordCount FROM ObjectTable;
+
+
+
+Q4 3. Create a user defined data type course_Type with 2 attributes course_id, description :
+a. Create an object table based on the type created.
+b. Insert rows into the table
+Demonstrate the working with different data sets
+
+
+
+-- Create the CourseTable
+CREATE TABLE CourseTable (
+    course_id INT PRIMARY KEY,
+    description VARCHAR(255)
+);
+
+-- Procedure to Insert a Row into CourseTable
+CREATE PROCEDURE InsertCourse(courseId INT, courseDescription VARCHAR(255))
+AS
+BEGIN
+    INSERT INTO CourseTable (course_id, description) VALUES (courseId, courseDescription);
+END;
+
+-- Procedure to Retrieve All Rows from CourseTable
+CREATE PROCEDURE GetAllCourses()
+AS
+BEGIN
+    SELECT * FROM CourseTable;
+END;
+
+-- Procedure to Retrieve Courses with a Specific ID
+CREATE PROCEDURE GetCourseById(courseId INT)
+AS
+
+
+
